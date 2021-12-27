@@ -20,12 +20,12 @@ const testPersonID = '131052-308T'
 function checkPersonalID()
 {
     let userInput = readUserInput();
-    console.log('inside checkPersonalID: userInput', userInput);
+    //console.log('inside checkPersonalID: userInput', userInput);
     let validationResult = validateID( userInput );
 
     if( validationResult === true )
     {
-
+        document.getElementById('age_information').innerHTML = calculateAge(userInput, true);
     } else {
         document.getElementById( 'validation_result' ).innerHTML = validationResult;
     }
@@ -46,7 +46,7 @@ function readUserInput()
  */
 function validateID( personId )
 {
-    console.log('inside validateID:', personId );
+    //console.log('inside validateID:', personId );
     /**
      * So basically we do a check on the value of the variable given here as an argument.
      */
@@ -59,10 +59,10 @@ function validateID( personId )
     // check if the numbers are correct length
     let idLength = personId.length;
     if( idLength == 11 ){
-        console.log('the length is ', idLength)
+        //console.log('the length is ', idLength)
         result = true;
     } else {
-        console.log('length is less than 11');
+        //console.log('length is less than 11');
         result = 'The length of the personal ID must be 11';
         return result;
     }
@@ -79,8 +79,8 @@ function validateID( personId )
     }
 
     // validate birth date is correct
-    validateBirthday( personId );
-    // validate the control character
+    result = validateBirthday( personId );
+    // TODO : validate the control character
     // % 31
     return result;
 
@@ -107,10 +107,21 @@ function validateBirthday( personId ){
         result = 'The birth date cannot be any later than today';
     }
     // There are no zero days and zero months, only years cab be 00.
-
+    if(mm == 0 || dd == 0)
+    {
+        result = "The birth month and date can not be zero";
+    }
     // check the date is correct. Is it a 31 day long month? is it 02.29?
     // Let's not check for leap year for now
-
+    if( mm > 12)
+    {
+        result = "Moths can not be bigger than 12"
+    }
+    if( dd > 31)
+    {
+        result = "The dates can not be bigger than 31"
+    }
+    return result;
 }
 
 /**
@@ -119,10 +130,50 @@ function validateBirthday( personId ){
  * @param {boolean} specific 
  * @returns 
  */
-function calculateAge( birthday, specific ){
-    let age;
+function calculateAge(personId, specific){
+  
+    let century = personId.substring(6,7);
+    let dd = Number( personId.substring(0,2) );
+    let mm = Number( personId.substring(2,4) );
+    let yy = Number( personId.substring(4,6) );
 
-    return age;
+    if( century === "-" )
+    {
+        yy = yy + 1900;
+    }
+    else if( century.toLowerCase() === "a" )
+    {
+        yy += 2000;
+    }
+    else if( century.toLowerCase() === "+" )
+    {
+        yy += 1800;
+    }
+    else
+    {
+        return "Age can not be determined";
+    }
+    let timeNow = new Date().getTime();
+    let dob = new Date();
+    dob.setDate(dd)
+    dob.setMonth(mm)
+    dob.setFullYear(yy)
+    let timeDiff = timeNow - dob.getTime();
+    let ageNow = new Date(timeDiff);
+
+    let ageDate = ageNow.getDate();
+    let ageMonth = ageNow.getMonth();
+
+    let diffYear = ageNow.getFullYear() - 1970;
+    let ageYear = Math.abs( diffYear );
+
+    if( specific )
+    {
+        return "Age: " + ageYear + " years, " + ageMonth + " months, " + ageDate + " days old."
+    }
+    else{
+        return "Age: " + ageYear + " years old.";
+    }
 }
 
 /**
