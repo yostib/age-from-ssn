@@ -96,16 +96,18 @@ function validateBirthday( personId ){
     let currentMonth = new Date().getMonth() + 1;
     let currentDay = new Date().getDate()
     let result;
+    console.log(dd, " " , mm, yy, century);
     //validate the year
     // if the birth century is the current century the birth date cannot be any later than today.
-    if( ( century === 'A' || century === 'a' ) 
-    && ( yy <= currentYear && mm <= currentMonth && dd <= currentDay ) )
+    // TODO: this can be cheated, change to using new Date() to compare if the date is later than today
+    if( ( century.toLowerCase() === 'a' ) 
+    && ( yy > currentYear && mm > currentMonth && dd > currentDay ) )
     {
-        result = true;
+        result = 'The birth date cannot be any later than today';
     }
     else
     {
-        result = 'The birth date cannot be any later than today';
+        result = true;
     }
     // There are no zero days and zero months, only years cab be 00.
     if(mm == 0 || dd == 0)
