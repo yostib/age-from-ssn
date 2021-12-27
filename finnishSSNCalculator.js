@@ -25,6 +25,7 @@ function checkPersonalID()
 
     if( validationResult === true )
     {
+        // TODO: get value for specific and pass it to calculateAge
         document.getElementById('age_information').innerHTML = calculateAge(userInput, true);
     } else {
         document.getElementById( 'validation_result' ).innerHTML = validationResult;
@@ -80,7 +81,7 @@ function validateID( personId )
 
     // validate birth date is correct
     result = validateBirthday( personId );
-    // TODO : validate the control character
+    // TODO: validate the control character
     // % 31
     return result;
 
